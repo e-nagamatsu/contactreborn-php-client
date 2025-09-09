@@ -1,0 +1,39 @@
+{
+    "name": "contactreborn/php-client",
+    "description": "PHP client library for Contact/Reborn API - Email validation and block check service",
+    "type": "library",
+    "keywords": ["email", "validation", "block", "check", "api", "contact", "reborn"],
+    "homepage": "https://contact-reborn.net",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Contact/Reborn Team",
+            "email": "support@contact-reborn.net"
+        }
+    ],
+    "require": {
+        "php": "^7.4|^8.0",
+        "guzzlehttp/guzzle": "^7.0",
+        "ext-json": "*"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.0|^10.0",
+        "friendsofphp/php-cs-fixer": "^3.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "ContactReborn\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "ContactReborn\\Tests\\": "tests/"
+        }
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true,
+    "scripts": {
+        "test": "vendor/bin/phpunit",
+        "cs-fix": "vendor/bin/php-cs-fixer fix"
+    }
+}
