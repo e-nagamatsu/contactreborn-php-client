@@ -18,7 +18,7 @@ class ContactRebornClient
     /**
      * API Base URL
      */
-    const API_BASE_URL = 'https://contact-reborn.net/api';
+    const API_BASE_URL = 'https://contact-reborn.net';
     
     /**
      * @var string API Token
@@ -79,7 +79,7 @@ class ContactRebornClient
     public function checkEmail(string $email): array
     {
         try {
-            $response = $this->httpClient->post('/check', [
+            $response = $this->httpClient->post('/api/check', [
                 'json' => [
                     'email' => $email
                 ]
@@ -104,123 +104,6 @@ class ContactRebornClient
                 'confidence' => $data['confidence'] ?? null,
                 'checked_at' => $data['checked_at'] ?? date('Y-m-d H:i:s'),
             ];
-            
-        } catch (GuzzleException $e) {
-            $this->handleException($e);
-        }
-    }
-    
-    /**
-     * Get user's blocked email list
-     * 
-     * @param int $page Page number
-     * @param int $perPage Items per page
-     * @return array
-     * @throws ApiException
-     */
-    public function getBlockedEmails(int $page = 1, int $perPage = 20): array
-    {
-        try {
-            $response = $this->httpClient->get('/user-blocked-emails', [
-                'query' => [
-                    'page' => $page,
-                    'per_page' => $perPage
-                ]
-            ]);
-            
-            return json_decode($response->getBody()->getContents(), true);
-            
-        } catch (GuzzleException $e) {
-            $this->handleException($e);
-        }
-    }
-    
-    /**
-     * Add email to user's blocked list
-     * 
-     * @param string $email Email to block
-     * @param string|null $reason Optional reason
-     * @return array
-     * @throws ApiException
-     */
-    public function addBlockedEmail(string $email, ?string $reason = null): array
-    {
-        try {
-            $data = ['email' => $email];
-            if ($reason !== null) {
-                $data['reason'] = $reason;
-            }
-            
-            $response = $this->httpClient->post('/user-blocked-emails', [
-                'json' => $data
-            ]);
-            
-            return json_decode($response->getBody()->getContents(), true);
-            
-        } catch (GuzzleException $e) {
-            $this->handleException($e);
-        }
-    }
-    
-    /**
-     * Remove email from user's blocked list
-     * 
-     * @param int $id Blocked email ID
-     * @return bool
-     * @throws ApiException
-     */
-    public function removeBlockedEmail(int $id): bool
-    {
-        try {
-            $response = $this->httpClient->delete('/user-blocked-emails/' . $id);
-            
-            return $response->getStatusCode() === 204 || $response->getStatusCode() === 200;
-            
-        } catch (GuzzleException $e) {
-            $this->handleException($e);
-        }
-    }
-    
-    /**
-     * Batch check multiple emails
-     * 
-     * @param array $emails Array of email addresses
-     * @return array
-     * @throws ApiException
-     */
-    public function batchCheckEmails(array $emails): array
-    {
-        try {
-            $response = $this->httpClient->post('/batch-check', [
-                'json' => [
-                    'emails' => $emails
-                ]
-            ]);
-            
-            return json_decode($response->getBody()->getContents(), true);
-            
-        } catch (GuzzleException $e) {
-            $this->handleException($e);
-        }
-    }
-    
-    /**
-     * Get API usage statistics
-     * 
-     * @param string $period Period: 'daily', 'weekly', 'monthly'
-     * @return array
-     * @throws ApiException
-     */
-    public function getUsageStats(string $period = 'daily'): array
-    {
-        try {
-            $response = $this->httpClient->get('/v1/stats/usage', [
-                'query' => [
-                    'period' => $period
-                ]
-            ]);
-            
-            return json_decode($response->getBody()->getContents(), true);
             
         } catch (GuzzleException $e) {
             $this->handleException($e);

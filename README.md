@@ -5,7 +5,6 @@ Contact/Reborn API 用の PHP クライアントライブラリです。メー�
 ## 機能
 
 - メールアドレスのブロックチェック
-- ユーザー独自のブロックリスト管理
 
 ## 要件
 
@@ -76,8 +75,6 @@ if (CheckResult::isBlocked($result['result'])) {
 
 ### メールチェック
 
-#### 単一メールアドレスのチェック
-
 ```php
 $result = $client->checkEmail('user@example.com');
 
@@ -90,63 +87,6 @@ $result = $client->checkEmail('user@example.com');
 //     'confidence' => 0.95,
 //     'checked_at' => '2025-09-08 12:00:00'
 // ]
-```
-
-#### 複数メールアドレスの一括チェック
-
-```php
-$emails = [
-    'user1@example.com',
-    'user2@example.com',
-    'blocked@tempmail.com'
-];
-
-$results = $client->batchCheckEmails($emails);
-
-foreach ($results['results'] as $email => $result) {
-    if (CheckResult::isBlocked($result['result'])) {
-        echo "{$email} はブロックされています\n";
-    }
-}
-```
-
-### ブロックリスト管理
-
-#### ブロックリストの取得
-
-```php
-$blockedList = $client->getBlockedEmails($page = 1, $perPage = 20);
-
-foreach ($blockedList['data'] as $blocked) {
-    echo "ブロック: {$blocked['email']} - {$blocked['reason']}\n";
-}
-```
-
-#### ブロックメールの追加
-
-```php
-use ContactReborn\Enums\BlockType;
-
-$result = $client->addBlockedEmail(
-    'blocked@example.com',
-    '不正なメール送信者として報告'
-);
-```
-
-#### ブロックメールの削除
-
-```php
-$success = $client->removeBlockedEmail($id);
-```
-
-### 利用統計
-
-```php
-$stats = $client->getUsageStats('daily');
-
-echo "本日のAPI呼び出し数: {$stats['calls_today']}\n";
-echo "残り呼び出し可能数: {$stats['remaining_calls']}\n";
-echo "レート制限: {$stats['rate_limit']}\n";
 ```
 
 ## Enum クラス
@@ -168,18 +108,6 @@ CheckResult::isSafe($result)       // 安全判定
 CheckResult::needsReview($result)  // 要確認判定
 CheckResult::getLabel($result)     // ラベル取得
 CheckResult::getDescription($result) // 説明取得
-```
-
-### BlockType - ブロックタイプ
-
-```php
-use ContactReborn\Enums\BlockType;
-
-BlockType::FULL    // 完全一致
-BlockType::PREFIX  // 前方一致
-BlockType::SUFFIX  // ドメイン一致
-BlockType::DOMAIN  // ドメインのみ
-BlockType::PATTERN // パターン一致
 ```
 
 ## エラーハンドリング
